@@ -17,7 +17,8 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-change-me")
     DATABASE = _abs(os.environ.get("DATABASE", os.path.join("instance", "sales.db")))
     # 값이 있으면 SQLite 대신 PostgreSQL(Supabase) 사용 — Vercel 배포용
-    DATABASE_URL = os.environ.get("DATABASE_URL") or None
+    # (BOM·공백이 섞여 들어오는 경우를 대비해 정리)
+    DATABASE_URL = (os.environ.get("DATABASE_URL") or "").strip().lstrip("﻿").strip() or None
     # Vercel은 파일 시스템에 쓸 수 없으므로 로그를 표준 출력(Vercel 로그)으로 보낸다
     LOG_TO_STDOUT = bool(os.environ.get("VERCEL") or os.environ.get("LOG_TO_STDOUT"))
     # 업로드(CSV 파일 포함) 요청 최대 크기 — 기본 1MB
