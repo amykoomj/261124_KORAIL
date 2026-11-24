@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+instance/
+logs/
+.env
+*.pyc
+.pytest_cache/
+
+.env.*.local
+supabase/.temp/
+.vercel/
+.claude/

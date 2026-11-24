@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} · 매출 분석{% endblock %}
+{% block body %}
+<header class="top band"><div class="wrap errpage">
+  <h1>{{ code }}</h1>
+  <p class="lede">{{ message }}</p>
+  <p><a href="{{ url_for('views.index') }}">대시보드로 돌아가기</a></p>
+</div></header>
+{% endblock %}

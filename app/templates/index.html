@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block body %}
+<p class="net" id="netMsg" role="alert" hidden></p>
+
+<header class="top band"><div class="wrap">
+  <h1 id="headline">매출 분석</h1>
+  <p class="lede" id="lede">불러오는 중…</p>
+  <div class="cards" id="cards"></div>
+</div></header>
+
+<section class="band filters wrap" aria-label="필터">
+  <label class="f">분기 <select id="fQ"><option value="all">전체 분기</option></select></label>
+  <div class="chips" id="fB" role="group" aria-label="지점 선택"></div>
+</section>
+
+<section class="band wrap">
+  <div class="grid">
+    <div class="panel big" style="grid-column:1/-1">
+      <h2>분기별 매출 추이</h2><p class="sub">지점별 꺾은선 · 단위 원</p>
+      <div class="fig loading"><canvas id="cLine"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h2>지점별 매출 비교</h2><p class="sub" id="barSub"></p></div>
+      <label class="f">분기 <select id="barQ"></select></label></div>
+      <div class="fig loading"><canvas id="cBar"></canvas></div>
+    </div>
+    <div class="panel">
+      <h2>고객 수 비중</h2><p class="sub" id="donutSub"></p>
+      <div class="fig loading"><canvas id="cDonut"></canvas></div>
+    </div>
+    <div class="panel" style="grid-column:1/-1">
+      <h2>객단가 추이</h2><p class="sub">매출 ÷ 고객 수 · 단위 원</p>
+      <div class="fig loading"><canvas id="cArpu"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="band wrap" aria-labelledby="inT">
+  <h2 class="sec" id="inT">데이터 입력</h2>
+  <div class="panel">
+    <form id="addForm" class="form" novalidate>
+      <label>분기<input type="text" id="iQ" placeholder="2026-Q1" autocomplete="off"></label>
+      <label>지점명<input type="text" id="iB" placeholder="서울" list="branchList" autocomplete="off" maxlength="30"></label>
+      <label>매출 금액(원)<input type="text" id="iA" inputmode="numeric" placeholder="125000000"></label>
+      <label>고객 수(명)<input type="text" id="iC" inputmode="numeric" placeholder="4200"></label>
+      <button class="pri" type="submit">추가</button>
+    </form>
+    <datalist id="branchList"></datalist>
+    <div class="msg" id="addMsg" role="status"></div>
+    <details style="margin-top:6px">
+      <summary style="cursor:pointer;min-height:32px">CSV로 여러 건 붙여넣기</summary>
+      <p class="note">한 줄에 한 건씩 <code>분기,지점,금액,고객수</code> 순서로 입력하세요. 첫 줄이 제목이면 자동으로 건너뜁니다.</p>
+      <textarea id="csv" placeholder="2026-Q1,서울,125000000,4200&#10;2026-Q1,부산,98000000,3100"></textarea>
+      <label class="file">또는 CSV 파일 선택 (1MB 이하)
+        <input type="file" id="csvFile" accept=".csv,.tsv,.txt,text/csv,text/plain"></label>
+      <div class="actions"><button type="button" id="csvBtn" class="pri">CSV 추가</button></div>
+      <div class="msg" id="csvMsg" role="status"></div>
+    </details>
+  </div>
+</section>
+
+<section class="band wrap" aria-labelledby="tT">
+  <h2 class="sec" id="tT">데이터 표</h2>
+  <div class="panel">
+    <div class="scroll"><table id="tbl">
+      <thead><tr>
+        <th data-k="quarter">분기</th><th data-k="branch">지점</th><th data-k="amount" class="num">매출 금액</th>
+        <th data-k="customers" class="num">고객 수</th><th data-k="arpu" class="num">객단가</th><th class="nosort num">작업</th>
+      </tr></thead>
+      <tbody></tbody><tfoot></tfoot>
+    </table></div>
+    <div class="actions">
+      <button type="button" id="expCsv">CSV 다운로드</button>
+      <button type="button" id="expXlsx">엑셀 다운로드</button>
+      <span class="sep"></span>
+      <button type="button" id="clrSample">예시 데이터 지우기</button>
+      <button type="button" id="resetAll" class="warn">데이터 초기화</button>
+      <button type="button" id="undoBtn" hidden>되돌리기</button>
+    </div>
+    <div class="msg" id="tblMsg" role="status"></div>
+    <p class="note" id="sampleNote" hidden>처음 보이는 서울·대전·부산 2026년 분기 데이터는 예시입니다.</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='vendor/chart.umd.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,73 @@
+/* VOICE: 차분한 업무용 대시보드 — 결론과 숫자가 먼저
+   IDEA: 분기 실적 보고서 한 장. 상단 컬러 밴드에 핵심 수치
+   PICTURE: 지점별 분기 매출 추이 선그래프가 첫 화면의 중심
+   COLOUR and TYPE: 하늘색 밴드 #4fb3e8, 잉크 #10223a, 강조 주황 / Outfit 숫자 + Noto Sans KR
+   LAYOUT: 밴드(제목·요약) → 필터 한 줄 → 그래프 2×2 → 입력 → 표
+   (원본 아티팩트 <style> 그대로. 글꼴은 설치돼 있지 않으면 시스템 글꼴로 대체) */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0b1726);--panel:light-dark(#f6f8fb,#112238);--line:light-dark(#dde3ea,#24364f);
+--ink:light-dark(#10223a,#eef3f8);--ink2:light-dark(#4a5a70,#a9b8c9);--band:light-dark(#4fb3e8,#14486b);
+--bandink:light-dark(#08233a,#eef6fc);--acc:#ff7a1a;--bad:light-dark(#c42b2b,#ff8a80);--good:light-dark(#0a7d33,#5fd38a);
+--sans:"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+--num:Outfit,"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);overflow-x:clip}
+.band{padding:clamp(24px,4vw,48px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{background:var(--band);color:var(--bandink)}
+h1{font:600 clamp(30px,4.4vw,46px)/1.05 var(--num);margin:0 0 6px;text-wrap:balance}
+.lede{margin:0 0 22px;font-size:17px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.card{background:light-dark(rgba(255,255,255,.78),rgba(8,26,44,.55));border-radius:12px;padding:14px 16px}
+.card b{display:block;font:600 clamp(22px,2.6vw,30px)/1.15 var(--num);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card span{font-size:14px;color:inherit;opacity:.85}
+.up{color:var(--good)}.down{color:var(--bad)}
+.filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;background:var(--panel);font-size:15px}
+.chip input{width:16px;height:16px;margin:0;accent-color:var(--ink)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+label.f{font-size:14px;color:var(--ink2);display:flex;align-items:center;gap:8px}
+select,input,textarea,button{font:inherit;font-size:16px;color:var(--ink)}
+select,input[type=text],input[type=number],textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:0 12px;min-height:44px}
+textarea{padding:10px 12px;width:100%;min-height:110px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px}
+button{min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+button.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.warn{border-color:var(--bad);color:var(--bad)}
+button:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.panel h2{font-size:18px;margin:0 0 2px}.panel p.sub{margin:0 0 10px;font-size:14px;color:var(--ink2)}
+.ph{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.fig{position:relative;min-height:300px}.fig>canvas{position:absolute;inset:0;width:100%;height:100%}
+.big .fig{min-height:360px}
+.form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:10px;align-items:end}
+.form label{display:grid;gap:4px;font-size:14px;color:var(--ink2)}
+.msg{min-height:24px;font-size:14px;margin-top:8px}.msg.err{color:var(--bad)}.msg.ok{color:var(--good)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-weight:500;color:var(--ink2);cursor:pointer;user-select:none}
+th.nosort{cursor:default}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+tfoot td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
+td input{min-height:36px;width:100%;min-width:90px}
+.act button{min-height:36px;padding:0 10px;font-size:14px;margin-left:4px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.actions .sep{flex:1 1 auto}
+.note{font-size:13px;color:var(--ink2)}
+.empty{padding:28px;text-align:center;color:var(--ink2)}
+h2.sec{font-size:22px;margin:0 0 12px}
+@media(max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}.form{grid-template-columns:repeat(2,minmax(0,1fr))}.form button{grid-column:1/-1}}
+@media(max-width:600px){table{font-size:13px}.fig{min-height:260px}.big .fig{min-height:280px}}
+
+/* ---- 웹앱 전환으로 추가된 부분 ---- */
+.fig.loading::after{content:"불러오는 중…";position:absolute;inset:0;display:grid;place-items:center;color:var(--ink2);font-size:15px;background:color-mix(in srgb,var(--panel) 70%,transparent);z-index:1}
+.net{margin:0;padding:10px max(5vw,16px);background:light-dark(#fde8e8,#3a1418);color:var(--bad);font-size:15px;text-align:center}
+.file{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px;font-size:14px;color:var(--ink2)}
+.file input[type=file]{font-size:14px;max-width:100%}
+.errpage{max-width:560px;margin:12vh auto;text-align:center}
+.errpage h1{font-size:64px;margin-bottom:12px}
+.errpage a{color:var(--ink)}
